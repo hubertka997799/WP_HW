@@ -55,11 +55,9 @@ int main(){
 		if ( (childpid = fork()) == 0) {	/* child process */
             
 			close(listenfd);	/* close listening socket */
-            //printf("while begin\n");
             read(connfd,buffer,BUFF_SIZE);
             printf("%s",buffer);
-            //printf("while end\n");
-            if (!strncmp(buffer,"GET",3)){
+            if (!strncmp(buffer,"GET",3)){ //GET sth...
                 if (buffer[5]==' '){
                     file=index_name;
                 }else{
@@ -92,14 +90,13 @@ int main(){
                 close(filefd);
             }
             if (!strncmp(buffer,"POST",4)){
-                boundary=strstr(buffer,"boundary=");
+                boundary=strstr(buffer,"boundary=");//find boundary
                 boundary+=9;
                 i=0;
                 while(*(boundary+i)!='\r' && *(boundary+i)!='\n') i++;
                 *(boundary+i)=0;
 
-                fstr=strstr(boundary+i+1,boundary);
-
+                fstr=strstr(boundary+i+1,boundary);//find filename
                 file=strstr(fstr,"filename=");
                 file+=10;
                 i=0;
@@ -107,10 +104,10 @@ int main(){
                 *(file+i)=0;
                 filefd=open(file,O_WRONLY|O_CREAT);
 
-                fstr=strstr(file+i+1,"\r\n\r\n");
+                fstr=strstr(file+i+1,"\r\n\r\n");//find beginnig of file
                 fstr+=4;
                 strcpy(tmp,boundary);
-                while((file=strstr(fstr,tmp))==NULL){
+                while((file=strstr(fstr,tmp))==NULL){//send file
                     write(filefd,fstr,BUFF_SIZE-((long)fstr-(long)buffer));
                     read(connfd,buffer,BUFF_SIZE);
                     //printf("\n\n%s\n\n",buffer);
