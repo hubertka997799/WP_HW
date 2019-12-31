@@ -1,0 +1,8 @@
+若抓不到pcap
+gcc hw3.c -lpcap
+
+執行
+./a.out -r test.pcap
+
+程式只針對IPv4 IPv6
+以及其下之UDP TCP
